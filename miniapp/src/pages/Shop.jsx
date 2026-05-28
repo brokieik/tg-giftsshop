@@ -24,84 +24,6 @@ function getEmoji(name) {
   return '🎁';
 }
 
-function ConfirmModal({ product, onConfirm, onCancel }) {
-  return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        onClick={onCancel}
-        style={{
-          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)',
-          zIndex: 999, display: 'flex', alignItems: 'center', justifyContent: 'center',
-          padding: 20, backdropFilter: 'blur(8px)',
-        }}
-      >
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0, y: 20 }}
-          animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.9, opacity: 0 }}
-          transition={{ type: 'spring', bounce: 0.3, duration: 0.4 }}
-          onClick={e => e.stopPropagation()}
-          style={{
-            background: 'var(--card2)', borderRadius: 24,
-            border: '1px solid var(--border)', padding: '28px 24px',
-            textAlign: 'center', maxWidth: 340, width: '100%',
-            boxShadow: '0 20px 80px rgba(108,99,255,0.3)',
-          }}
-        >
-          <div style={{ fontSize: 60, marginBottom: 16, lineHeight: 1 }}>
-            {getEmoji(product?.name)}
-          </div>
-
-          <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 8 }}>Подтверждение покупки</h2>
-          <p style={{ color: 'var(--text2)', fontSize: 14, marginBottom: 16 }}>
-            Вы точно хотите купить <strong>{product?.name}</strong>?
-          </p>
-
-          {product?.description && (
-            <p style={{ color: 'var(--text3)', fontSize: 12, marginBottom: 16, fontStyle: 'italic' }}>
-              {product.description}
-            </p>
-          )}
-
-          <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: 6,
-            background: 'rgba(108,99,255,0.15)', borderRadius: 30, padding: '8px 16px', marginBottom: 20,
-          }}>
-            <span>⭐</span>
-            <span style={{ fontWeight: 700, fontSize: 16 }}>{product?.price}</span>
-          </div>
-
-          <div style={{ display: 'flex', gap: 12 }}>
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              onClick={onCancel}
-              style={{
-                flex: 1, background: 'var(--bg2)', color: 'white', border: '1px solid var(--border)',
-                borderRadius: 12, padding: '12px', fontWeight: 600, fontSize: 14, cursor: 'pointer', transition: 'all 0.2s',
-              }}
-            >
-              Отмена
-            </motion.button>
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              onClick={onConfirm}
-              style={{
-                flex: 1, background: 'linear-gradient(135deg, var(--accent), #9d96ff)', color: 'white',
-                borderRadius: 12, padding: '12px', fontWeight: 700, fontSize: 14, border: 'none', cursor: 'pointer', transition: 'all 0.2s',
-              }}
-            >
-              Купить
-            </motion.button>
-          </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
-  );
-}
-
 function OrderModal({ order, product, onClose }) {
   useEffect(() => {
     const timer = setTimeout(onClose, 8000);
@@ -190,7 +112,7 @@ function OrderModal({ order, product, onClose }) {
             style={{
               width: '100%', background: 'linear-gradient(135deg, var(--accent), #9d96ff)',
               color: 'white', borderRadius: 14, padding: '13px',
-              fontWeight: 700, fontSize: 15, border: 'none', cursor: 'pointer', transition: 'all 0.2s',
+              fontWeight: 700, fontSize: 15,
             }}
           >
             Отлично!
@@ -209,12 +131,12 @@ function ProductCard({ product, onBuy, i }) {
   return (
     <motion.div {...fadeUp(i)} style={{
       background: 'var(--card)', borderRadius: 20,
-      border: '1px solid var(--border)', overflow: 'hidden', cursor: 'pointer', transition: 'all 0.3s',
+      border: '1px solid var(--border)', overflow: 'hidden',
     }}>
       <div style={{
         background: 'linear-gradient(135deg, var(--card2), rgba(108,99,255,0.08))',
         height: 130, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 70, position: 'relative', overflow: 'hidden',
+        fontSize: 70, position: 'relative',
       }}>
         {product.image_url && !product.image_url.includes('placeholder') ? (
           <img src={product.image_url} alt={product.name}
@@ -234,21 +156,6 @@ function ProductCard({ product, onBuy, i }) {
             color: product.stock > 0 ? '#4ade80' : '#ff6b6b',
           }}>
             {product.stock > 0 ? `${product.stock} шт.` : 'Нет в наличии'}
-          </div>
-        )}
-
-        {product.tag && (
-          <div style={{
-            position: 'absolute', top: 8, left: 8,
-            background: '#FF4444',
-            color: 'white',
-            borderRadius: '20px',
-            padding: '3px 10px',
-            fontSize: 10,
-            fontWeight: 700,
-            letterSpacing: '0.5px',
-          }}>
-            {product.tag}
           </div>
         )}
       </div>
@@ -274,9 +181,9 @@ function ProductCard({ product, onBuy, i }) {
                 ? 'linear-gradient(135deg, var(--accent), #9d96ff)'
                 : 'rgba(255,255,255,0.06)',
               color: canAfford && inStock ? 'white' : 'var(--text3)',
-              borderRadius: 30, padding: '9px 18px', border: 'none',
+              borderRadius: 30, padding: '9px 18px',
               fontWeight: 700, fontSize: 13,
-              transition: 'all 0.2s', cursor: canAfford && inStock ? 'pointer' : 'not-allowed',
+              transition: 'all 0.2s',
             }}
           >
             {!inStock ? 'Нет в наличии' : !canAfford ? 'Не хватает ⭐' : 'Купить'}
@@ -293,7 +200,6 @@ export default function Shop() {
   const [loading, setLoading] = useState(true);
   const [orderResult, setOrderResult] = useState(null);
   const [buying, setBuying] = useState(null);
-  const [confirmProduct, setConfirmProduct] = useState(null);
 
   useEffect(() => {
     fetch('/api/products').then(r => r.json()).then(data => {
@@ -322,12 +228,11 @@ export default function Shop() {
       toast.error('Ошибка соединения');
     } finally {
       setBuying(null);
-      setConfirmProduct(null);
     }
   };
 
   return (
-    <div style={{ padding: '0 0 8px', userSelect: 'none' }}>
+    <div style={{ padding: '0 0 8px' }}>
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -364,19 +269,11 @@ export default function Shop() {
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             {products.map((p, i) => (
-              <ProductCard key={p.id} product={p} onBuy={() => setConfirmProduct(p)} i={i} />
+              <ProductCard key={p.id} product={p} onBuy={handleBuy} i={i} />
             ))}
           </div>
         )}
       </div>
-
-      {confirmProduct && (
-        <ConfirmModal 
-          product={confirmProduct} 
-          onConfirm={() => handleBuy(confirmProduct)}
-          onCancel={() => setConfirmProduct(null)}
-        />
-      )}
 
       {orderResult && (
         <OrderModal
