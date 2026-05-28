@@ -52,7 +52,7 @@ router.post('/auth', (req, res) => {
         const referrer = db.prepare('SELECT * FROM users WHERE referral_code = ?').get(referral_code);
         if (referrer && referrer.telegram_id !== telegram_id) {
           referredBy = referrer.telegram_id;
-          db.prepare('UPDATE users SET balance = balance + 1 WHERE telegram_id = ?').run(referrer.telegram_id);
+          db.prepare('UPDATE users SET balance = balance + 10 WHERE telegram_id = ?').run(referrer.telegram_id);
         }
       }
       db.prepare(`
@@ -219,14 +219,11 @@ router.post('/promo', (req, res) => {
   }
 });
 
-// Verify payment via Telegram (check transaction)
-router.post('/verify-payment', (req, res) => {
+router.post('/topup', (req, res) => {
   try {
-    const { user_id, amount, telegram_payment_charge_id } = req.body;
-    if (!user_id || !amount) return res.status(400).json({ error: 'Invalid params' });
-    
-    db.prepare('UPDATE users SET balance = balance + ?, total_deposited = total_deposited + ? WHERE telegram_id = ?')
-      .run(amount, amount, user_id);
+    const { user_id, amount } = req.body;
+    if (!amount || amount <= 0) return res.status(400).json({ error: 'Invalid amount' });
+    db.prepare('UPDATE users SET balance = balance + ?, total_deposited = total_deposited + ? WHERE telegram_id = ?').run(amount, amount, user_id);
     const user = db.prepare('SELECT * FROM users WHERE telegram_id = ?').get(user_id);
     res.json({ success: true, new_balance: user.balance });
   } catch (err) {
