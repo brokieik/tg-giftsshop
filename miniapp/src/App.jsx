@@ -10,8 +10,6 @@ import AdminPanel from './pages/AdminPanel.jsx';
 export const AppContext = createContext(null);
 export function useApp() { return useContext(AppContext); }
 
-const ADMIN_ID = 6151671553;
-
 export default function App() {
   const [tab, setTab] = useState('home');
   const [user, setUser] = useState(null);
@@ -58,8 +56,7 @@ export default function App() {
         if (data.user) {
           setUser(data.user);
           const viteAdminId = import.meta.env.VITE_ADMIN_ID;
-          const isHardcodedAdmin = String(telegramUser.id) === String(ADMIN_ID);
-          if (adminParam === 'true' || (viteAdminId && String(telegramUser.id) === String(viteAdminId)) || isHardcodedAdmin) {
+          if (adminParam === 'true' || (viteAdminId && String(telegramUser.id) === String(viteAdminId))) {
             setIsAdmin(true);
             setTab('admin');
           }
@@ -126,7 +123,7 @@ export default function App() {
 
   if (isAdmin) {
     return (
-      <AppContext.Provider value={{ user, setUser, refreshUser, tg: window.Telegram?.WebApp }}>
+      <AppContext.Provider value={{ user, setUser, refreshUser }}>
         <Toaster position="top-center" toastOptions={{ style: { background: 'var(--card2)', color: 'var(--text)', border: '1px solid var(--border)' } }} />
         <AdminPanel />
       </AppContext.Provider>
@@ -137,7 +134,7 @@ export default function App() {
   const TabComponent = tabs[tab] || Home;
 
   return (
-    <AppContext.Provider value={{ user, setUser, refreshUser, tg: window.Telegram?.WebApp }}>
+    <AppContext.Provider value={{ user, setUser, refreshUser }}>
       <Toaster position="top-center" toastOptions={{ style: { background: 'var(--card2)', color: 'var(--text)', border: '1px solid var(--border)' } }} />
       <div className="page">
         <div className="scroll-area">
